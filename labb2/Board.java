@@ -23,6 +23,10 @@ public class Board {
       }
     }
   }
+
+  public int getSize() {
+    return size;
+  }
   public char get(int x, int y) {
     return gameBoard[size-y][x-1];
   }
