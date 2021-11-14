@@ -11,9 +11,10 @@
 /   showFog-metod för att visa motståndarens bräde med dess båtar maskerade.  */
 
 public class Board {
-  int size;
-  char[][] gameBoard;
+  private int size;
+  private char[][] gameBoard;
   public Board(int size) {
+//TODO: Limit size to 26 (letter-chars marking x-axis)
     this.size = size;
     gameBoard = new char[size][size];
     for (int i=0; i<size; ++i){
@@ -22,6 +23,20 @@ public class Board {
       }
     }
   }
+  public char get(int x, int y) {
+    return gameBoard[size-y][x-1];
+  }
+  public void set(int x, int y, char c) {
+    if (x>0 && x<=size && y>=0 && y<size){
+      y=size-y;
+      gameBoard[y][x-1]=c;
+    }
+  }
+
+  public void clear(int x, int y) {
+    set(x,y,' ');
+  }
+
   public void show() {
     for (int i=0; i<size; ++i) {
       if (size>9 && size-i<10) {
@@ -38,5 +53,6 @@ public class Board {
     for (int x=0; x<size; ++x) {
       System.out.print((char)(xAxis+x) + "  ");
     }
+    System.out.println();
   }
 }
