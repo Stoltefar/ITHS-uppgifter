@@ -60,10 +60,34 @@ public class Board {
     System.out.println();
   }
 
+  public void showFog() {
+    for (int i=0; i<size; ++i) {
+      if (size>9 && size-i<10) {
+        System.out.print(size-i + ": ");
+      }
+      else System.out.print(size-i + ":");
+      for (int j=0; j<size; ++j) {
+        if(gameBoard[i][j]!='O') {
+          System.out.print("[" + gameBoard[i][j] + "]");
+        }
+        else 
+          System.out.print("[ ]");
+      }
+      System.out.println();
+    }
+    System.out.print("    ");
+    char xAxis= 'A';
+    for (int x=0; x<size; ++x) {
+      System.out.print((char)(xAxis+x) + "  ");
+    }
+    System.out.println();
+  }
+
   public boolean placeBoat(int x, int y, char orient) {
     if (orient=='v' || orient=='V') {
       if (x<1 || x>= size || y<2 || y>=size-1) {
-        System.out.println("Denna placering är inte giltig då hela, eller någon del av, skeppet hamnar utanför spelplanen. Försök igen.");
+        System.out.println("This placement is invalid. The ship, or some part of it, is out of bounds. Try again.");
+//      System.out.println("Denna placering är inte giltig då hela, eller någon del av, skeppet hamnar utanför spelplanen. Försök igen.");
         return false;
       } else if (roomForBoat(x, y, orient)) {
           set(x, y-1, 'O');
@@ -71,13 +95,15 @@ public class Board {
           set(x, y+1, 'O');
           return true;
         } else {
-            System.out.println("Ett tidigare placerat skepp ligger i direkt anslutning till denna placering. Gör om, gör rätt!");
+            System.out.println("One of your previously placed ships prevents this placement. Try again.");
+//          System.out.println("Ett tidigare placerat skepp förhindrar denna placering. Gör om, gör rätt!");
             return false;
         }
       }
       else if (orient=='h' || orient=='H') {
         if (y<1 || y>= size || x<2 || x>=size-1) {
-          System.out.println("Denna placering är inte giltig då hela, eller någon del av, skeppet hamnar utanför spelplanen. Försök igen.");
+          System.out.println("This placement is invalid. The ship, or some part of it, is out of bounds. Try again.");
+//        System.out.println("Denna placering är inte giltig då hela, eller någon del av, skeppet hamnar utanför spelplanen. Försök igen.");
           return false;
         } else if (roomForBoat(x, y, orient)) {
             set(x-1, y, 'O');
@@ -85,13 +111,14 @@ public class Board {
             set(x+1, y, 'O');
             return true;
           } else {
-              System.out.println("Ett tidigare placerat skepp förhindrar denna placering. Gör om, gör rätt!");
-              return false;
+            System.out.println("One of your previously placed ships prevents this placement. Try again.");
+//          System.out.println("Ett tidigare placerat skepp förhindrar denna placering. Gör om, gör rätt!");
+            return false;
             }
     }
     return false;
   }
-  public boolean roomForBoat(int x, int y, char orient) {
+  private boolean roomForBoat(int x, int y, char orient) {
     if (orient=='v' || orient=='V') {
       if (y==2) {
         for (int i=size-4; i<size-1; ++i) {
