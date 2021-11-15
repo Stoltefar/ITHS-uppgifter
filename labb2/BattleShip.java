@@ -28,20 +28,38 @@ public class BattleShip {
 
     boolean gunnerOneTurn = true;
 
-    Board g1Board = initialize();
+    for (int i=0; i<2; ++i) {
+      if (gunnerOneTurn) {
+      Board g1Board = initialize(gunnerOneTurn);
+      }
+      else {
+      Board g2Board = initialize(gunnerOneTurn);
+      }
+      gunnerOneTurn = !gunnerOneTurn;
+    }
+    
 
   }
 
-  private static Board initialize() {
+  private static Board initialize(boolean gunnerOneTurn) {
     Scanner sc = new Scanner(System.in);
-    clearScreen();
     Board playerBoard = new Board(10);
+    clearScreen();
+    if (gunnerOneTurn) {
+      System.out.print("First player! Identify yourself: ");
+    }
+    else {
+      System.out.print("Second player! Identify yourself: ");
+    }
+    playerBoard.setGunner(sc.nextLine());
+
     playerBoard.show();
+    System.out.print(playerBoard.getGunner() + "! ");
     System.out.println("Here's your empty playing field. You now have to put your four ships on it.");
     System.out.println("Each ship is three spaces large, and can be placed either horizontally or vertically.");
     System.out.println("To place a ship you will submit a coordinate which represents the middle space of the ship.");
     System.out.println("Then choose \"h\" for horizontal or \"v\" for vertical for the ship's orientation.");
-    System.out.println("Press Enter to continue...");
+    System.out.print("Press Enter to continue...");
     sc.nextLine();
     clearScreen();
     playerBoard.show();
@@ -49,7 +67,7 @@ public class BattleShip {
     System.out.println("or touching a previously placed ship, neither directly adjacent or on the corners.");
     System.out.println();
     System.out.println();
-    System.out.println("Press Enter to start placing your ships...");
+    System.out.print("Press Enter to start placing your ships...");
     sc.nextLine();
     int shipsToPlace = 4;
     clearScreen();
@@ -59,8 +77,13 @@ public class BattleShip {
       System.out.println();
       System.out.println("Enter the middle coordinate (E8 for example) for the ship you want to place: ");
       System.out.println();
-      System.out.println();
+      System.out.print("Coordinate: ");
       String xy = sc.nextLine();
+      while (xy.length()<2) {
+        System.out.println("You can't describe a coordinate with only one character!");
+        System.out.print("Get a grip, " + playerBoard.getGunner() + "! Now enter a letter followed by a number: ");
+        xy = sc.nextLine();
+      }
       int x = yCharToYInt(xy.charAt(0));
       int y;
       if (xy.length()>2) {
@@ -82,7 +105,7 @@ public class BattleShip {
     }
     playerBoard.show();
     System.out.println();
-    System.out.println("Great! You have successfully placed your ships!");
+    System.out.println("Great " + playerBoard.getGunner() +"! You have successfully placed your ships!");
     System.out.println();
     System.out.println("Press Enter to continue...");
     sc.nextLine();

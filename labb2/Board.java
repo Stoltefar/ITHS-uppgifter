@@ -13,6 +13,7 @@
 public class Board {
   private int size;
   private char[][] gameBoard;
+  private String gunner;
   public Board(int size) {
 //TODO: Limit size to 26 (letter-chars marking x-axis)
     this.size = size;
@@ -30,6 +31,15 @@ public class Board {
   public char get(int x, int y) {
     return gameBoard[size-y][x-1];
   }
+
+  public void setGunner(String s) {
+    gunner=s;
+  }
+
+  public String getGunner() {
+    return gunner;
+  }
+  
   public void set(int x, int y, char c) {
     if (x>0 && x<=size && y>0 && y<=size){
       y=size-y;
