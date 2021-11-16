@@ -1,17 +1,39 @@
 public class Cannon {
   public boolean fire(int x, int y, Board board) {
     if (board.get(x, y)=='O') {
-      System.out.println("Kaboom!");
       board.set(x, y, 'X');
+      board.showFog();
+      System.out.println("\nKaboom!\n");
+      System.out.println("You will get another shot!");
+      try  {
+        Thread.sleep(3000);
+      }
+      catch(InterruptedException ex) {
+        Thread.currentThread().interrupt();
+      }
       return true;
     }
     else if (board.get(x, y)==' ') {
-      System.out.print("Sploosh!");
       board.set(x, y, '.');
+      board.showFog();
+      System.out.println("\nSploosh!");
+
       if (checkNear(x, y, board)) {
+        try  {
+          Thread.sleep(700);
+        }
+        catch(InterruptedException ex) {
+          Thread.currentThread().interrupt();
+        }
         System.out.println("...but it was a close one.");
       }
-      else System.out.println();
+      System.out.println("Incoming! Take cover!");
+      try  {
+        Thread.sleep(3000);
+      }
+      catch(InterruptedException ex) {
+        Thread.currentThread().interrupt();
+      }
       return false;
     }
     else if (board.get(x, y)=='.' || board.get(x, y)=='X') {
