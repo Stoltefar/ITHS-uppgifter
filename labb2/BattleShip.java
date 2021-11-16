@@ -25,34 +25,87 @@ public class BattleShip {
 */
 //    turn(b1);
 
+    Scanner sc = new Scanner(System.in);
+    boolean gunnerOneTurn = false, anotherTurn, gameOver = false;
+    int turnNumber = 1;
+    System.out.println("Player one! Report for duty!");
+    System.out.println("\nMake sure your opponent can't see the screen!");
+    System.out.print("Press Enter to continue... ");
+    sc.nextLine();
+    Board g1Board = initialize();
+    clearScreen();
+    System.out.println("Player two! Report for duty!");
+    System.out.println("\nMake sure your opponent can't see the screen!");
+    System.out.print("Press Enter to continue... ");
+    sc.nextLine();
+    Board g2Board = initialize();
 
-    boolean gunnerOneTurn = true;
-
-    for (int i=0; i<2; ++i) {
+    while (!gameOver) {
+      clearScreen();
       if (gunnerOneTurn) {
-      Board g1Board = initialize(gunnerOneTurn);
+        System.out.println(g1Board.getGunner() + "! It's your turn at the helm! Make sure " + g2Board.getGunner() +" can't see the screen!");
+        System.out.println();
+        System.out.print("Press Enter when you are ready... ");
+        sc.nextLine();
+        g1Board.show();
+        System.out.println("\nThis shows the status of your ships after " + g2Board.getGunner() + "\'s turn.\n");
+        System.out.print("Press enter to shoot back... ");
+        sc.nextLine();
+        anotherTurn= true;
+        while (anotherTurn && !gameOver) {
+          anotherTurn = turn(g2Board);
+          gameOver = checkWinner(g2Board);
+        }
+        gunnerOneTurn = !gunnerOneTurn;
       }
       else {
-      Board g2Board = initialize(gunnerOneTurn);
+        System.out.println(g2Board.getGunner() + "! It's your turn at the helm! Make sure " + g1Board.getGunner() +" can't see the screen!");
+        System.out.println();
+        System.out.print("Press Enter when you are ready... ");
+        sc.nextLine();
+        if (turnNumber!=1) {
+          g2Board.show();
+          System.out.println("\nThis shows the status of your ships after " + g1Board.getGunner() + "\'s turn.\n");
+          System.out.print("Press enter to shoot back... ");
+          sc.nextLine();
+        }
+        anotherTurn= true;
+        while (anotherTurn) {
+          anotherTurn = turn(g1Board);
+          gameOver = checkWinner(g1Board);
+        }
+        gunnerOneTurn = !gunnerOneTurn;
       }
-      gunnerOneTurn = !gunnerOneTurn;
+      if (gunnerOneTurn) {
+        ++turnNumber;
+      }
     }
-    
-
+    //GAME OVER!
+    if (!gunnerOneTurn) {
+      g2Board.show();
+      System.out.println("\n" + g1Board.getGunner() + " is victorious!\n");
+      System.out.print("Press Enter to see where " + g1Board.getGunner() + " hid his ships... ");
+      sc.nextLine();
+      g1Board.show();
+      System.out.println("\n\n\n");
+    }
+    else {
+      g1Board.show();
+      System.out.println("\n" + g2Board.getGunner() + " is victorious!\n");
+      System.out.print("Press Enter to see where " + g2Board.getGunner() + " hid his ships... ");
+      g2Board.show();
+      System.out.println("\n\n\n");
+    }
   }
 
-  private static Board initialize(boolean gunnerOneTurn) {
+
+  private static Board initialize() {
     Scanner sc = new Scanner(System.in);
     Board playerBoard = new Board(10);
     clearScreen();
-    if (gunnerOneTurn) {
-      System.out.print("First player! Identify yourself: ");
-    }
-    else {
-      System.out.print("Second player! Identify yourself: ");
-    }
+    System.out.print("What is your call-sign? ");
     playerBoard.setGunner(sc.nextLine());
-
+    clearScreen();
     playerBoard.show();
     System.out.print(playerBoard.getGunner() + "! ");
     System.out.println("Here's your empty playing field. You now have to put your four ships on it.");
@@ -88,7 +141,6 @@ public class BattleShip {
       int y;
       if (xy.length()>2) {
         y = Integer.parseInt(xy.substring(1));
-        System.out.println("Y-värde: " + y);
       }
       else {
         y = Character.getNumericValue(xy.charAt(1));
@@ -113,16 +165,43 @@ public class BattleShip {
   }
 
 
-  private static boolean turn(Board target) {
+  public static boolean turn(Board target) {
     Scanner sc = new Scanner(System.in);
     Cannon gun = new Cannon();
     clearScreen();
     target.showFog();
+    System.out.println();
     System.out.println("Submit the coordinate for your shot. Example: B3");
+    System.out.println();
+    System.out.println("Enter coordinate: ");
     String xy = sc.nextLine();
+    while (xy.length()<2) {
+      System.out.println("You can't describe a coordinate with only one character!");
+      System.out.print("Get a grip! Now enter a letter followed by a number: ");
+      xy = sc.nextLine();
+    }
     int x = yCharToYInt(xy.charAt(0));
-    int y = Character.getNumericValue(xy.charAt(1));
+    int y;
+    if (xy.length()>2) {
+      y = Integer.parseInt(xy.substring(1));
+    }
+    else {
+      y = Character.getNumericValue(xy.charAt(1));
+    }
     return gun.fire(x, y, target);
+  }
+
+
+  private static boolean checkWinner(Board target) {
+    boolean noTargetsLeft = true;
+    for (int x=1; x<=target.getSize(); ++x) {
+      for (int y=1; y<=target.getSize(); ++y) {
+        if (target.get(x, y) == 'O') {
+          noTargetsLeft=false;
+        }
+      }
+    }
+    return noTargetsLeft;
   }
 
   private static void clearScreen() {
