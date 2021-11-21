@@ -51,6 +51,7 @@ public class BattleShip {
         System.out.println("\nThis shows the status of your ships after " + g2Board.getGunner() + "\'s turn.\n");
         System.out.print("Press enter to shoot back... ");
         sc.nextLine();
+        System.out.println();
         anotherTurn= true;
         while (anotherTurn && !gameOver) {
           anotherTurn = turn(g2Board);
@@ -68,9 +69,10 @@ public class BattleShip {
           System.out.println("\nThis shows the status of your ships after " + g1Board.getGunner() + "\'s turn.\n");
           System.out.print("Press enter to shoot back... ");
           sc.nextLine();
+          System.out.println();
         }
         anotherTurn= true;
-        while (anotherTurn) {
+        while (anotherTurn && !gameOver) {
           anotherTurn = turn(g1Board);
           gameOver = checkWinner(g1Board);
         }
@@ -84,7 +86,7 @@ public class BattleShip {
     if (!gunnerOneTurn) {
       g2Board.show();
       System.out.println("\n" + g1Board.getGunner() + " is victorious!\n");
-      System.out.print("Press Enter to see where " + g1Board.getGunner() + " hid his ships... ");
+      System.out.println("Press Enter to see where " + g1Board.getGunner() + " hid his ships... ");
       sc.nextLine();
       g1Board.show();
       System.out.println("\n\n\n");
@@ -92,7 +94,8 @@ public class BattleShip {
     else {
       g1Board.show();
       System.out.println("\n" + g2Board.getGunner() + " is victorious!\n");
-      System.out.print("Press Enter to see where " + g2Board.getGunner() + " hid his ships... ");
+      System.out.println("Press Enter to see where " + g2Board.getGunner() + " hid his ships... ");
+      sc.nextLine();
       g2Board.show();
       System.out.println("\n\n\n");
     }
@@ -105,23 +108,47 @@ public class BattleShip {
     clearScreen();
     System.out.print("What is your call-sign? ");
     playerBoard.setGunner(sc.nextLine());
-    clearScreen();
-    playerBoard.show();
-    System.out.print(playerBoard.getGunner() + "! ");
-    System.out.println("Here's your empty playing field. You now have to put your four ships on it.");
-    System.out.println("Each ship is three spaces large, and can be placed either horizontally or vertically.");
-    System.out.println("To place a ship you will submit a coordinate which represents the middle space of the ship.");
-    System.out.println("Then choose \"h\" for horizontal or \"v\" for vertical for the ship's orientation.");
-    System.out.print("Press Enter to continue...");
-    sc.nextLine();
-    clearScreen();
-    playerBoard.show();
-    System.out.println("You cannot place a ship with some part of it outside the playing field,");
-    System.out.println("or touching a previously placed ship, neither directly adjacent or on the corners.");
-    System.out.println();
-    System.out.println();
-    System.out.print("Press Enter to start placing your ships...");
-    sc.nextLine();
+    System.out.print(playerBoard.getGunner() + ", do you want the full tutorial? \"y\" for yes or \"n\" for no.");
+    String answer = sc.nextLine();
+    boolean tutorial = true;
+    if (answer.trim().equalsIgnoreCase("n")) {
+      tutorial = false;
+    }
+    if (tutorial) {
+      playerBoard.show();
+      System.out.print(playerBoard.getGunner() + "! ");
+      System.out.println("Here's your empty playing field. You now have to put your four ships on it.");
+      System.out.println("Each ship is three spaces large, and can be placed either horizontally or vertically.");
+      System.out.println("To place a ship you will submit a coordinate which represents the middle space of the ship.");
+      System.out.println("Then choose \"h\" for horizontal or \"v\" for vertical for the ship's orientation.");
+      System.out.print("Press Enter to continue...");
+      sc.nextLine();
+      clearScreen();
+      playerBoard.set(4, 6, 'O');
+      playerBoard.set(4, 7, 'O');
+      playerBoard.set(4, 5, 'O');
+      playerBoard.show();
+      System.out.println("To place the ship that has appeared on the board now, the player writes \"D6\" when asked");
+      System.out.println("for a coordinate, and \"v\" for choosing vertical orientation.");
+      System.out.println("You cannot place a ship with some part of it outside the playing field,");
+      System.out.println("or touching a previously placed ship, neither directly adjacent or on the corners.");
+      System.out.print("Press Enter to continue...");
+      sc.nextLine();
+      clearScreen();
+      playerBoard.set(7, 2, '.');
+      playerBoard.set(4, 5, 'X');
+      playerBoard.show();
+      System.out.println("Now your opponent has taken a couple of shots at your ship. The first shot (at G2) was a miss,");
+      System.out.println("which is represented by a point on the board, and ended your opponents turn.");
+      System.out.println("The second shot was a hit at D5 which is represented by an \"X\" on the board.");
+      System.out.println("The player who scores a hit gets to continue his or her turn, and fire again.");
+      System.out.print("Press Enter to start placing your ships...");
+      sc.nextLine();
+      playerBoard.clear(7, 2);
+      playerBoard.clear(4, 5);
+      playerBoard.clear(4, 6);
+      playerBoard.clear(4, 7);
+    }
     int shipsToPlace = 4;
     clearScreen();
     while (shipsToPlace>0) {
@@ -133,7 +160,7 @@ public class BattleShip {
       System.out.print("Coordinate: ");
       String xy = sc.nextLine();
       while (xy.length()<2) {
-        System.out.println("You can't describe a coordinate with only one character!");
+        System.out.println("You can't describe a coordinate like that!");
         System.out.print("Get a grip, " + playerBoard.getGunner() + "! Now enter a letter followed by a number: ");
         xy = sc.nextLine();
       }

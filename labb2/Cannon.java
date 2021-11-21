@@ -37,7 +37,13 @@ public class Cannon {
       return false;
     }
     else if (board.get(x, y)=='.' || board.get(x, y)=='X') {
-      System.out.println("You have already made a shot at this location. Try again!");
+      System.out.println("\nYou have already made a shot at this location. Try again!\n");
+      try  {
+        Thread.sleep(3000);
+      }
+      catch(InterruptedException ex) {
+        Thread.currentThread().interrupt();
+      }
       return true;
     }
     else {

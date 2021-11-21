@@ -1,13 +1,16 @@
 /*  Klassen Board skapar ett spelbräde till BattleShip som består av en
 /   tvådimensionell char-array där bägge arrayernas längder sätts till int-
-/   variabeln size i konstruktorn.
+/   variabeln size i konstruktorn. Innehåller också en String gunner som innehåller
+/   spelarens namn.
 /
 /   Metoder i klassen:
-/   Getter- och setter-metod för tecken i matrisen.
+/   Getter- och setter-metod för tecken i matrisen, size och gunner.
 /   clear-metod för att nollställa en posistion i matrisen.
 /   show-metod för att visa brädet.
 /   placeBoat-metod för att placera en båt, bestående av tre positioner i rad,
 /     antingen horisontellt eller vertikalt, på brädet.
+/   roomForBoat-metod för att kontrollera att placeringen är tillåten i förhållande
+/     till tidigare placerade skepp.
 /   showFog-metod för att visa motståndarens bräde med dess båtar maskerade.  */
 
 public class Board {
@@ -16,6 +19,11 @@ public class Board {
   private String gunner;
   public Board(int size) {
 //TODO: Limit size to 26 (letter-chars marking x-axis)
+    if (size<8 || size >26) {
+      System.out.println("This game doesn't play well with that size of board.");
+      System.out.println("The size of the board will be set to 10x10.");
+      size = 10;
+    }
     this.size = size;
     gameBoard = new char[size][size];
     for (int i=0; i<size; ++i){
@@ -39,7 +47,7 @@ public class Board {
   public String getGunner() {
     return gunner;
   }
-  
+
   public void set(int x, int y, char c) {
     if (x>0 && x<=size && y>0 && y<=size){
       y=size-y;
@@ -116,7 +124,6 @@ public class Board {
 //        System.out.println("Denna placering är inte giltig då hela, eller någon del av, skeppet hamnar utanför spelplanen. Försök igen.");
           return false;
         } else if (roomForBoat(x, y, orient)) {
-            System.out.println("Innan set, x=" +x+ ", y=" + y);
             set(x-1, y, 'O');
             set(x, y, 'O');
             set(x+1, y, 'O');
@@ -132,7 +139,7 @@ public class Board {
   private boolean roomForBoat(int x, int y, char orient) {
     if (orient=='v' || orient=='V') {
       if (y==2) {
-        for (int i=size-4; i<size-1; ++i) {
+        for (int i=size-4; i<size; ++i) {
           if (x==1) {
             for (int j=0; j<2; ++j) {
               if (gameBoard[i][j]=='O') {
