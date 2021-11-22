@@ -18,13 +18,15 @@ public class Board {
   private char[][] gameBoard;
   private String gunner;
   public Board(int size) {
-//TODO: Limit size to 26 (letter-chars marking x-axis)
     if (size<8 || size >26) {
       System.out.println("This game doesn't play well with that size of board.");
       System.out.println("The size of the board will be set to 10x10.");
       size = 10;
     }
-    this.size = size;
+    else {
+      this.size = size;
+    }
+
     gameBoard = new char[size][size];
     for (int i=0; i<size; ++i){
       for (int j=0; j<size; ++j) {
@@ -136,6 +138,11 @@ public class Board {
     }
     return false;
   }
+  /* Här kommer en funktion som kollar att ett nytt skepp inte hamnar direkt intill ett tidigare
+  placerat skepp. Jag inser att min version går utöver uppgiften i labben, men ville göra ett spel
+  som följer de klassiska placeringsreglerna i Sänka skepp. Det blev däremot över 150 rader kod
+  för att undvika indexOutOfBounds-exceptions, och det ber jag om ursäkt för... */
+
   private boolean roomForBoat(int x, int y, char orient) {
     if (orient=='v' || orient=='V') {
       if (y==2) {
