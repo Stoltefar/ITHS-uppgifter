@@ -200,7 +200,13 @@ public class BattleShip {
     else {
       y = Character.getNumericValue(xy.charAt(1));
     }
-    return gun.fire(x, y, target);
+    if (x<1 || x>target.getSize() || y<1 || y>target.getSize()) {
+      System.out.println("That shot will miss the board! Calibrate your sights and try again!");
+      return true;
+    }
+    else {
+      return gun.fire(x, y, target);
+    }
   }
 
 
