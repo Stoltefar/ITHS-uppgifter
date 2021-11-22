@@ -201,7 +201,8 @@ public class BattleShip {
       y = Character.getNumericValue(xy.charAt(1));
     }
     if (x<1 || x>target.getSize() || y<1 || y>target.getSize()) {
-      System.out.println("That shot will miss the board! Calibrate your sights and try again!");
+      System.out.println("That shot will miss the board! Calibrate your sights and press Enter to try again!");
+      sc.nextLine();
       return true;
     }
     else {
